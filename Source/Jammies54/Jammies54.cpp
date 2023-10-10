@@ -4,3 +4,5 @@
 #include "Modules/ModuleManager.h"
 
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, Jammies54, "Jammies54" );
+
+DEFINE_LOG_CATEGORY(SAVE_SYSTEM);
