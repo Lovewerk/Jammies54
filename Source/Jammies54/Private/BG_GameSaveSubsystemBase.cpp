@@ -19,7 +19,6 @@ void UBG_GameSaveSubsystemBase::SaveGame()
 
 	if (IsValid(myCurrentSave))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("mapSize Before Save: %d"), myCurrentSave->myActorMap.Num());
 		// create a callback to handle completion of save
 		FAsyncSaveGameToSlotDelegate OnSaveCompletedDelegate;
 		OnSaveCompletedDelegate.BindUObject(this, &UBG_GameSaveSubsystemBase::HandleSaveComplete);

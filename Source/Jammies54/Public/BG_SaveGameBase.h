@@ -25,7 +25,7 @@ private:
 	int32 mySaveUserIndex;
 
 	UPROPERTY()
-	FBG_GameData myGameData;
+	UBG_GameData* myGameData;
 
 public:
 
@@ -43,9 +43,13 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	//Pass back by reference
-	FBG_GameData& GetGameData();
+	UBG_GameData* GetGameData();
 
-	UPROPERTY(BlueprintReadWrite)
-	TMap<AActor*, int32> myActorMap;
-	
+	//Get a reference to the level data contained in the SaveGame's GameData
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UBG_LevelData* GetLevelData();
+
+	//Get a reference to player data contained in the SaveGame's GameData
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UBG_PlayerData* GetPlayerData();
 };

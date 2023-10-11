@@ -6,57 +6,60 @@
 #include "UObject/NoExportTypes.h"
 #include "BG_GameData.generated.h"
 
-// A base struct for data which should be saved, which will differ between different objects
-USTRUCT(BlueprintType)
-struct FBG_SaveableDataBase
+// A base for data which should be saved. Would use structs, but need UObjects for polymorphism in blueprints
+UCLASS(BlueprintType, Blueprintable, Abstract)
+class UBG_SaveableDataBase : public UObject
 {
 	GENERATED_BODY()
 };
 
 
 
-USTRUCT(BlueprintType)
-struct FBG_ButtonData : public FBG_SaveableDataBase
+UCLASS(BlueprintType)
+class UBG_ButtonData : public UBG_SaveableDataBase
 {
 	GENERATED_BODY()
-
-		UPROPERTY(BlueprintReadWrite)
+public:
+		UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 		bool bMyIsPressed;
-
-
 };
 
-USTRUCT(BlueprintType)
-struct FBG_LevelData
+UCLASS(BlueprintType)
+class UBG_LevelData : public UObject
 {
 	GENERATED_BODY()
 
-		UPROPERTY(BlueprintReadWrite)
-		TMap<FString, FBG_SaveableDataBase> myData;
-
-		
+public:
+	UPROPERTY(BlueprintReadWrite)
+	TMap<FGuid, UBG_SaveableDataBase*> myData;
 };
 
-USTRUCT(BlueprintType)
-struct FBG_PlayerData
+// #CLOVE_NOTE: Choosing to make the following data UObjects rather than USTRUCTS. Returning them from C++ to Blueprints by reference was more difficult than anticipated.
+
+UCLASS(BlueprintType)
+class UBG_PlayerData : public UObject
 {
 	GENERATED_BODY()
 
+public:
 		UPROPERTY(BlueprintReadWrite)
-		int32 myData;
+		TMap<FGuid, UBG_SaveableDataBase*> myData;
 
 		// map of {inventory class, int quantity}
 			// could be money, consumables, etc.
 };
 
-USTRUCT(BlueprintType)
-struct FBG_GameData
+UCLASS(BlueprintType)
+class UBG_GameData : public UObject
 {
 	GENERATED_BODY()
 
+		UBG_GameData();
+
+public:
 	UPROPERTY(BlueprintReadWrite)
-	FBG_PlayerData myPlayerData;
+	UBG_PlayerData* myPlayerData;
 
 	UPROPERTY(BlueprintReadWrite)
-	FBG_LevelData myLevelData;
+	UBG_LevelData* myLevelData;
 };
