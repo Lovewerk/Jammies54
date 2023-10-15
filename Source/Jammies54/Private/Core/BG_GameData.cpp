@@ -3,8 +3,8 @@
 
 #include "Core/BG_GameData.h"
 
-UBG_GameData::UBG_GameData()
-{
-	myLevelData = NewObject<UBG_LevelData>();
-	myPlayerData = NewObject<UBG_PlayerData>();
-}
+//UBG_GameData::UBG_GameData()
+//{
+//	myLevelData = CreateDefaultSubobject<UBG_LevelData>("LevelData");
+//	myPlayerData = CreateDefaultSubobject<UBG_PlayerData>("PlayerData");
+//}
