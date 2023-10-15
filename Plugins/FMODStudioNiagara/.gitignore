@@ -1,0 +1,8 @@
+# PBGet
+Binaries/
+/Intermediate
+.DS_Store
+
+### whitelisted files
+!Resources/*
+!Screenshots/*
