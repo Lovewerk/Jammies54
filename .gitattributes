@@ -21,3 +21,6 @@
 
 # Anything in `/RawContent` dir.
 /RawContent/**/* filter=lfs diff=lfs merge=lfs -text
+
+#FMOD Banks
+*.bank lock
