@@ -1,9 +1,17 @@
-# PBGet
-Binaries/
-/Intermediate
-.DS_Store
+# Ignore all files by default, but scan all directories.
+*
+!*/
 
-### whitelisted files
+# Do not ignore the following, according to https://www.fmod.com/docs/2.02/unreal/user-guide.html#source-control
+!/Binaries/**
+!/Content/**
+!/Source/**
+!/*.uplugin
+
+# According to web search, we don't need .pdb files
+*.pdb
+
+### whitelisted files (copied from Project Borealis GitLFS plugin''s gitignore)
 !Resources/*
 !Screenshots/*
 Docs/

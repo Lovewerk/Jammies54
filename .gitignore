@@ -49,3 +49,14 @@ Session.vim
 
 # Visual Studio
 .vs
+
+
+#FMOD - https://www.fmod.com/docs/2.02/unreal/user-guide.html#generated-assets
+/Content/FMOD/Banks/*
+/Content/FMOD/Buses/*
+/Content/FMOD/Events/*
+/Content/FMOD/PrivateIntegrationData/*
+/Content/FMOD/Reverbs/*
+/Content/FMOD/Snapshots/*
+/Content/FMOD/VCAs/*
+
