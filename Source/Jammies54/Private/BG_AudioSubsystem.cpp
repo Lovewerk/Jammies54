@@ -4,6 +4,7 @@
 
 #include "fmod_studio.hpp"
 #include "FMODStudioModule.h"
+#include "Core/BG_Util.h"
 
 
 void UBG_AudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -18,7 +19,7 @@ void UBG_AudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 		UE_LOG(BG_AUDIO_SYSTEM, Log, TEXT("FMOD Studio Module unavailable"));
 	}
 	
-	SetVCAVolume(myMusicVCAName, 0.0f);
+	SetVCAVolume(EVCAName::Music, 0.0f);
 
 	UE_LOG(BG_AUDIO_SYSTEM, Log, TEXT("AudioSubsystem Initialized!"));
 }
@@ -28,9 +29,9 @@ float UBG_AudioSubsystem::dBToLinear(float aDB)
 	return pow(10.0f, aDB / 20.0f); // verify this is correct
 }
 
-void UBG_AudioSubsystem::SetVCAVolume(const FString& aVCAName, const float& aLinearVolume)
+void UBG_AudioSubsystem::SetVCAVolume(const EVCAName aVCAName, const float& aLinearVolume)
 {
-	FString VCAName = "vca:/" + aVCAName;
+	FString VCAName = "vca:/" + GetVCAName(aVCAName);
 
 	if (myStudioSystem)
 	{
@@ -52,4 +53,11 @@ void UBG_AudioSubsystem::SetVCAVolume(const FString& aVCAName, const float& aLin
 	}
 	
 
+}
+
+FString UBG_AudioSubsystem::GetVCAName(const EVCAName aVCA) const
+{
+
+	//return UEnum::GetValueAsString(aVCA); // result: EVCAName::name
+	return UBG_Util::EnumToString<EVCAName>(aVCA); // result: name
 }

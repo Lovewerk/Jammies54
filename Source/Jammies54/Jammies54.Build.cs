@@ -8,9 +8,9 @@ public class Jammies54 : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "CinematicCamera", "FMODStudio" });        
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "CinematicCamera" });        
 
-        PrivateDependencyModuleNames.AddRange(new string[] {});
+        PrivateDependencyModuleNames.AddRange(new string[] { "FMODStudio" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

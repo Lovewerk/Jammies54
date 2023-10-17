@@ -13,6 +13,14 @@ namespace FMOD::Studio
 	class System;
 }
 
+UENUM(BlueprintType)
+enum class EVCAName : uint8
+{
+	Music,
+	SFX,
+	Dialogue
+};
+
 UCLASS()
 class JAMMIES54_API UBG_AudioSubsystem : public UGameInstanceSubsystem
 {
@@ -25,8 +33,11 @@ private:
 	
 
 public:
+	UFUNCTION(BlueprintCallable)
 	float dBToLinear(float dB);
-	void SetVCAVolume(const FString& aVCAName, const float& aLinearVolume);
+
+	UFUNCTION(BlueprintCallable)
+	void SetVCAVolume(const EVCAName aVCAName, const float& aLinearVolume);
 
 
 	// Constants
@@ -34,8 +45,6 @@ public:
 	const FString mySFXVCAName{ "SFX" };
 
 	UFUNCTION(BlueprintCallable)
-	FString GetMusicVCAName() const { return myMusicVCAName; };
-	UFUNCTION(BlueprintCallable)
-	FString GetSFXVCAName() const { return myMusicVCAName; };
+	FString GetVCAName(const EVCAName aVCA) const;
 	
 };
