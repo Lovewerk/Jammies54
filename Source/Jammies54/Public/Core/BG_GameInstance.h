@@ -18,4 +18,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bMyReloadSaveOnNewWorldInit; //used for ensuring when we restart our current level, that we start from the last save.
 	
+	UPROPERTY(BlueprintReadOnly)
+	bool bDebugMode;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+		bool IsDebug() const;
 };
