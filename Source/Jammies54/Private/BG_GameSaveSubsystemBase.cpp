@@ -30,7 +30,7 @@ void UBG_GameSaveSubsystemBase::SaveGame()
 {
 	if (!IsValid(myCurrentSave) && !UGameplayStatics::DoesSaveGameExist(myDefaultSlot, myDefaultUserIndex))
 	{
-		UE_LOG(SAVE_SYSTEM, Warning, TEXT("Attempted Save with no current save and no save exists on disk for current slot. Will attempt to prepare a new save slot."));
+		UE_LOG(BG_SAVE_SYSTEM, Warning, TEXT("Attempted Save with no current save and no save exists on disk for current slot. Will attempt to prepare a new save slot."));
 		myResumeSaveAfterPrepareSaveSlotHandle = myOnPrepareSaveSlotCompletedDelegate.AddUObject(this, &UBG_GameSaveSubsystemBase::SaveGame);
 		PrepareSaveSlot();
 		return;
@@ -54,12 +54,12 @@ void UBG_GameSaveSubsystemBase::SaveGame()
 		myCurrentSave->isPressed = true;
 
 		// save the game to disk
-		UE_LOG(SAVE_SYSTEM, Log, TEXT("Begin async save"));
+		UE_LOG(BG_SAVE_SYSTEM, Log, TEXT("Begin async save"));
 		UGameplayStatics::AsyncSaveGameToSlot(myCurrentSave, myDefaultSlot, myDefaultUserIndex, OnSaveCompletedDelegate);
 	}
 	else
 	{
-		UE_LOG(SAVE_SYSTEM, Error, TEXT("Attempted to save and slot exists, but current save in the SaveGame is invalid."));
+		UE_LOG(BG_SAVE_SYSTEM, Error, TEXT("Attempted to save and slot exists, but current save in the SaveGame is invalid."));
 	}
 }
 
@@ -69,7 +69,7 @@ void UBG_GameSaveSubsystemBase::LoadGame()
 	FAsyncLoadGameFromSlotDelegate LoadedDelegate;
 	LoadedDelegate.BindUObject(this, &UBG_GameSaveSubsystemBase::HandleLoadComplete);
 
-	UE_LOG(SAVE_SYSTEM, Log, TEXT("Begin loading save data!"));
+	UE_LOG(BG_SAVE_SYSTEM, Log, TEXT("Begin loading save data!"));
 	if (myOnLoadStartedDelegate.IsBound())
 	{
 		myOnLoadStartedDelegate.Broadcast();
@@ -82,7 +82,7 @@ void UBG_GameSaveSubsystemBase::ClearGameData()
 {
 	if (UGameplayStatics::DeleteGameInSlot(myDefaultSlot, myDefaultUserIndex))
 	{
-		UE_LOG(SAVE_SYSTEM, Warning, TEXT("Deleted save in slot %s!"), *myDefaultSlot);
+		UE_LOG(BG_SAVE_SYSTEM, Warning, TEXT("Deleted save in slot %s!"), *myDefaultSlot);
 	}
 }
 
@@ -94,11 +94,11 @@ void UBG_GameSaveSubsystemBase::HandleSaveComplete(const FString& aSlotName, con
 		{
 			myOnSaveCompletedDelegate.Broadcast();
 		} // saving is finished!
-		UE_LOG(SAVE_SYSTEM, Log, TEXT("Saving game completed successfully!"));
+		UE_LOG(BG_SAVE_SYSTEM, Log, TEXT("Saving game completed successfully!"));
 	}
 	else
 	{
-		UE_LOG(SAVE_SYSTEM, Error, TEXT("Saving game failed!"));
+		UE_LOG(BG_SAVE_SYSTEM, Error, TEXT("Saving game failed!"));
 		checkNoEntry(); // the save failed! #CLOVE_TODO: how will we handle this and what circumstances will cause it?
 	}
 }
@@ -111,7 +111,7 @@ void UBG_GameSaveSubsystemBase::HandleLoadComplete(const FString& aSlotName, con
 
 		if (IsValid(myCurrentSave))
 		{
-			UE_LOG(SAVE_SYSTEM, Log, TEXT("Load completed successfully!"));
+			UE_LOG(BG_SAVE_SYSTEM, Log, TEXT("Load completed successfully!"));
 			if (myOnLoadCompletedDelegate.IsBound())
 			{
 				myOnLoadCompletedDelegate.Broadcast(myCurrentSave);
@@ -119,13 +119,13 @@ void UBG_GameSaveSubsystemBase::HandleLoadComplete(const FString& aSlotName, con
 		}
 		else
 		{
-			UE_LOG(SAVE_SYSTEM, Error, TEXT("Loading save game But casting to desired subclass failed."));
+			UE_LOG(BG_SAVE_SYSTEM, Error, TEXT("Loading save game But casting to desired subclass failed."));
 		}
 	}
 	else
 	{
 		//checkNoEntry(); // #CLOVE_TODO: loading failed, how should we handle this?
-		UE_LOG(SAVE_SYSTEM, Error, TEXT("Loading save game failed! Did not receive a valid SaveGame on load completion."));
+		UE_LOG(BG_SAVE_SYSTEM, Error, TEXT("Loading save game failed! Did not receive a valid SaveGame on load completion."));
 	}
 }
 
@@ -144,7 +144,7 @@ void UBG_GameSaveSubsystemBase::PrepareSaveSlot()
 
 				//ensure we don't accidentally call this lambda again if loading triggered from a different source
 				myOnLoadCompletedDelegate.Remove(myOnLoadCompletedWhenPrepareExistingSaveHandle);
-				UE_LOG(SAVE_SYSTEM, Log, TEXT("Remove listener from prepareSaveSlotComplete event"));
+				UE_LOG(BG_SAVE_SYSTEM, Log, TEXT("Remove listener from prepareSaveSlotComplete event"));
 			}
 		);
 
@@ -162,7 +162,7 @@ void UBG_GameSaveSubsystemBase::PrepareSaveSlot()
 		}
 		else
 		{
-			UE_LOG(SAVE_SYSTEM, Error, TEXT("On Creating a new save game, it was null!"));
+			UE_LOG(BG_SAVE_SYSTEM, Error, TEXT("On Creating a new save game, it was null!"));
 			checkNoEntry();
 		}
 	}
