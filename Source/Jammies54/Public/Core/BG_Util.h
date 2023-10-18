@@ -9,6 +9,13 @@ enum class EConditionalOutput : uint8
 	Failure
 };
 
+UENUM()
+enum class EBoolOutput : uint8
+{
+	IsTrue,
+	IsFalse
+};
+
 UCLASS()
 class JAMMIES54_API UBG_Util : public UBlueprintFunctionLibrary
 {
@@ -31,6 +38,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Bounced|Core", meta = (WorldContext = "aWorldContextObject", Keywords = "game instance gameinstance", DefaultToSelf = "aWorldContextObject", ExpandEnumAsExecs = "someOutputs"))
 		static UBG_GameInstance* GetGameInstance(const UObject* aWorldContextObject, EConditionalOutput& someOutputs);
 
-	UFUNCTION(BlueprintCallable, Category = "Bounced|Debug", BlueprintPure, meta = (WorldContext = "aWorldContextObject", Keywords = "debug", DefaultToSelf = "aWorldContextObject"))
-		static bool IsDebug(const UObject* aWorldContextObject, const bool anAdditionalCondition = true);
+	UFUNCTION(BlueprintCallable, Category = "Bounced|Debug", meta = (WorldContext = "aWorldContextObject", Keywords = "debug", DefaultToSelf = "aWorldContextObject", ExpandEnumAsExecs = "someOutputs"))
+		static bool IsDebug(const UObject* aWorldContextObject, EBoolOutput& someOutputs, const bool anAdditionalCondition = true);
+
+	UFUNCTION(BlueprintCallable, Category = "Bounced|Util", meta = (WorldContext = "aWorldContextObject", Keywords = "quit game exit", DefaultToSelf = "aWorldContextObject"))
+		static void QuitGameWithFade(const UObject* aWorldContextObject, float aFadeDuration = 0.8f, float aWaitAfterFadeDuration = 0.5f); //making fade duration constref prevents showing a default value in blueprint?
+
+
 };
