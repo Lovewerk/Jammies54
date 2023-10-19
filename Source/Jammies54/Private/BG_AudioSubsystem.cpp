@@ -26,7 +26,12 @@ void UBG_AudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 float UBG_AudioSubsystem::dBToLinear(float aDB)
 {
-	return pow(10.0f, aDB / 20.0f); // verify this is correct
+	return pow(10.0f, aDB / 10.0f);
+}
+
+float UBG_AudioSubsystem::LinearTodB(float aLinear)
+{
+	return 10.0f * log10(aLinear); //#CLOVE_CHECK: ensure these formulae are correct
 }
 
 void UBG_AudioSubsystem::SetVCAVolume(const EVCAName aVCAName, const float& aLinearVolume)
@@ -35,29 +40,59 @@ void UBG_AudioSubsystem::SetVCAVolume(const EVCAName aVCAName, const float& aLin
 
 	if (myStudioSystem)
 	{
-		FMOD::Studio::VCA* Vca{nullptr};
-		myStudioSystem->getVCA(TCHAR_TO_UTF8(*VCAName), &Vca);
-		if (Vca)
+		FMOD::Studio::VCA* vca{nullptr};
+		myStudioSystem->getVCA(TCHAR_TO_UTF8(*VCAName), &vca);
+		if (vca && vca->isValid())
 		{
-			Vca->setVolume(aLinearVolume);
+			vca->setVolume(aLinearVolume);
 			UE_LOG(BG_AUDIO_SYSTEM, Log, TEXT("Setting %s volume to %d"), *VCAName, aLinearVolume);
 		}
 		else
 		{
-			UE_LOG(BG_AUDIO_SYSTEM, Log, TEXT("Unable to set volume on %s as it is null"), *VCAName);
+			UE_LOG(BG_AUDIO_SYSTEM, Warning, TEXT("Unable to set volume on %s as it is null"), *VCAName);
 		}
 	}
 	else
 	{
-		UE_LOG(BG_AUDIO_SYSTEM, Log, TEXT("Unable to set volume on %s as the studio system is null"), *VCAName);
+		UE_LOG(BG_AUDIO_SYSTEM, Warning, TEXT("Unable to set volume on %s as the studio system is null"), *VCAName);
 	}
-	
+}
 
+float UBG_AudioSubsystem::GetVCAVolumeLinear(const EVCAName aVCAName)
+{
+	FString VCAName = "vca:/" + GetVCAName(aVCAName);
+
+	if (myStudioSystem)
+	{
+		FMOD::Studio::VCA* vca{nullptr};
+		myStudioSystem->getVCA(TCHAR_TO_UTF8(*VCAName), &vca);
+		if (vca && vca->isValid())
+		{
+			float volume;
+			vca->getVolume(&volume);
+			if (volume)
+			{
+				UE_LOG(BG_AUDIO_SYSTEM, Log, TEXT("VCA %s volume: %d"), *VCAName, volume);
+				return volume;
+			}
+			{
+				UE_LOG(BG_AUDIO_SYSTEM, Warning, TEXT("VCA %s volume result was null"), *VCAName);
+			}
+		}
+		else
+		{
+			UE_LOG(BG_AUDIO_SYSTEM, Warning, TEXT("Unable to get volume from %s as it is null or invalid"), *VCAName);
+		}
+	}
+	else
+	{
+		UE_LOG(BG_AUDIO_SYSTEM, Warning, TEXT("Unable to get volume of %s as the studio system is null"), *VCAName);
+	}
+	return 0;
 }
 
 FString UBG_AudioSubsystem::GetVCAName(const EVCAName aVCA) const
 {
-
 	//return UEnum::GetValueAsString(aVCA); // result: EVCAName::name
 	return UBG_Util::EnumToString<EVCAName>(aVCA); // result: name
 }

@@ -37,12 +37,14 @@ public:
 	float dBToLinear(float dB);
 
 	UFUNCTION(BlueprintCallable)
+	float LinearTodB(float aLinear);
+
+	UFUNCTION(BlueprintCallable)
 	void SetVCAVolume(const EVCAName aVCAName, const float& aLinearVolume);
 
-
-	// Constants
-	const FString myMusicVCAName{ "Music" };
-	const FString mySFXVCAName{ "SFX" };
+	UFUNCTION(BlueprintCallable)
+	// returns 0 if the VCA was not found or is invalid
+	float GetVCAVolumeLinear(const EVCAName aVCAName);
 
 	UFUNCTION(BlueprintCallable)
 	FString GetVCAName(const EVCAName aVCA) const;
