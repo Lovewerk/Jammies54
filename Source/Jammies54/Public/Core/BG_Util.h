@@ -2,6 +2,8 @@
 #include "BG_GameInstance.h"
 #include "BG_Util.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnFPSCalculatedSignature, const float&, aRate);
+
 UENUM()
 enum class EConditionalOutput : uint8
 {
@@ -42,7 +44,14 @@ public:
 		static bool IsDebug(const UObject* aWorldContextObject, EBoolOutput& someOutputs, const bool anAdditionalCondition = true);
 
 	UFUNCTION(BlueprintCallable, Category = "Bounced|Util", meta = (WorldContext = "aWorldContextObject", Keywords = "quit game exit", DefaultToSelf = "aWorldContextObject"))
-		static void QuitGameWithFade(const UObject* aWorldContextObject, float aFadeDuration = 0.8f, float aWaitAfterFadeDuration = 0.5f); //making fade duration constref prevents showing a default value in blueprint?
+		//making fade duration constref prevents showing a default value in blueprint?
+		static void QuitGameWithFade(const UObject* aWorldContextObject, float aFadeDuration = 0.8f, float aWaitAfterFadeDuration = 0.5f);
+
+
+	UFUNCTION(BlueprintCallable, Category = "Bounced|Util", meta = (WorldContext = "aWorldContextObject", AutoCreateRefTerm = "anFPSCallback"))
+	static void TrackFPS_Trigger(const UObject* aWorldContextObject, const FOnFPSCalculatedSignature& anFPSCallback, UPARAM(ref) FTimerHandle& aTimerHandle); 
+	
+	static void TrackFPS(const TWeakObjectPtr<const UObject> aWorldContextObject, const FOnFPSCalculatedSignature& anFPSCallback, FTimerHandle& aTimerHandle);
 
 
 };

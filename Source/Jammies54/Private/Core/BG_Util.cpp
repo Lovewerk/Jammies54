@@ -1,5 +1,6 @@
 #include "Core/BG_Util.h"
 #include "Kismet/GameplayStatics.h"
+#include "../Jammies54.h"
 
 UBG_GameInstance* UBG_Util::GetGameInstance(const UObject* aWorldContextObject, EConditionalOutput& someOutputs)
 {
@@ -55,14 +56,38 @@ void UBG_Util::QuitGameWithFade(const UObject* aWorldContextObject, float aFadeD
 					{
 						playerController->ConsoleCommand("quit");
 					}
-				}, aFadeDuration, false /*loop*/);
-
-			if (UGameViewportClient* ViewportClient = world->GetGameViewport())
-			{
-				ViewportClient->RemoveAllViewportWidgets();
-			}
+				}, aFadeDuration + aWaitAfterFadeDuration, false /*loop*/);
 		}
+	}
+}
 
-		// #CLOVE_TODO: Add a way to have all widgets on screen fade out as we fade to black
+void UBG_Util::TrackFPS_Trigger(const UObject* aWorldContextObject, const FOnFPSCalculatedSignature& anFPSCallback, FTimerHandle& aTimerHandle)
+{
+
+	TWeakObjectPtr<const UObject> contextObjectWeakPtr = aWorldContextObject;
+	TrackFPS(contextObjectWeakPtr, anFPSCallback, aTimerHandle);
+
+	UE_LOG(BG_UTIL_TICKING, Log, TEXT("Trigger TrackFPS"));
+}
+
+void UBG_Util::TrackFPS(const TWeakObjectPtr<const UObject> aWorldContextObject, const FOnFPSCalculatedSignature& anFPSCallback, FTimerHandle& aTimerHandle)
+{
+	if (aWorldContextObject.IsValid())
+	{
+		if (const UWorld* world = aWorldContextObject->GetWorld())
+		{
+			anFPSCallback.ExecuteIfBound(1.0f / world->GetDeltaSeconds());
+
+			//UE_LOG(BG_UTIL_TICKING, Log, TEXT("Verify ticking in TrackFPS")); 
+
+			aTimerHandle = world->GetTimerManager().SetTimerForNextTick([aWorldContextObject, anFPSCallback, world, &aTimerHandle]()
+				{
+					TrackFPS(aWorldContextObject, anFPSCallback, aTimerHandle);
+				});
+		}
+	}
+	else
+	{
+		UE_LOG(BG_UTIL_TICKING, Log, TEXT("Stop TrackFPS due to invalid aWorldContextObject"));
 	}
 }
