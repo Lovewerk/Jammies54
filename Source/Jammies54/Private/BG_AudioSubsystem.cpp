@@ -18,8 +18,6 @@ void UBG_AudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	{
 		UE_LOG(BG_AUDIO_SYSTEM, Log, TEXT("FMOD Studio Module unavailable"));
 	}
-	
-	SetVCAVolume(EVCAName::Music, 0.0f);
 
 	UE_LOG(BG_AUDIO_SYSTEM, Log, TEXT("AudioSubsystem Initialized!"));
 }
@@ -70,14 +68,9 @@ float UBG_AudioSubsystem::GetVCAVolumeLinear(const EVCAName aVCAName)
 		{
 			float volume;
 			vca->getVolume(&volume);
-			if (volume)
-			{
-				UE_LOG(BG_AUDIO_SYSTEM, Log, TEXT("VCA %s volume: %d"), *VCAName, volume);
-				return volume;
-			}
-			{
-				UE_LOG(BG_AUDIO_SYSTEM, Warning, TEXT("VCA %s volume result was null"), *VCAName);
-			}
+			UE_LOG(BG_AUDIO_SYSTEM, Log, TEXT("VCA %s volume: %d"), *VCAName, volume);
+
+			return volume;
 		}
 		else
 		{
